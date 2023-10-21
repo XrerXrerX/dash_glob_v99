@@ -1,0 +1,8 @@
+
+# Block Access to /boscitra, /bosmega, /bosgema, /boslinda with any query string
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{QUERY_STRING} .
+# RewriteRule ^(boscitra|bosmega|bosgema|boslinda|boszoya) - [F]
+
+# Allow Access to /boscitra/, /bosmega/, /boslinda/, /bosgema/, /boszoya/ without query string
+# RewriteRule ^(boscitra|bosmega|boslinda|bosgema|boszoya)/$ - [L]s
