@@ -14,10 +14,8 @@
             <div class="list_form">
                 <span class="sec_label">Divisi</span>
                 <select id="divisi" name="divisi">
-                    @foreach ($datawebsite as $website)
-                        <option value="{{ $website->nama }}">
-                            {{ $website->nama }}</option>
-                    @endforeach
+                    <option value="maintenance">Maintenance</option>
+                    <option value="superadmin">Superadmin</option>
                 </select>
             </div>
             <div class="list_form">
@@ -73,7 +71,7 @@
                 var formData = new FormData(this);
 
                 // Mengambil token CSRF dari meta tag
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                var csrfToken = '{{ csrf_token() }}';
 
                 // Menambahkan token CSRF dalam data formData
                 formData.append('_token', csrfToken);

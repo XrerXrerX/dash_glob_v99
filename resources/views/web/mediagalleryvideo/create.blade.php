@@ -45,7 +45,19 @@
 
         $('#form').submit(function(event) {
             event.preventDefault();
+            var $submitButton = $('#Contactsubmit');
+            $submitButton.prop('disabled', true); // Menonaktifkan tombol submit
 
+            // Tampilkan loading
+            Swal.fire({
+                title: 'Uploading...',
+                allowOutsideClick: false,
+                showCancelButton: false, // Menghilangkan tombol cancel
+                showConfirmButton: false, // Menghilangkan tombol OK
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             // Menggunakan variabel FormData untuk mengumpulkan data formulir
             var formData = new FormData(this);
 
@@ -56,6 +68,8 @@
                 processData: false, // Menonaktifkan pengolahan data otomatis
                 contentType: false, // Menonaktifkan tipe konten otomatis
                 success: function(result) {
+                    $submitButton.prop('disabled', false);
+
                     if (result.errors) {
                         $('.alert-danger').html('');
 

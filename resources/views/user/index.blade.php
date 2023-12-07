@@ -90,8 +90,8 @@
             @foreach ($data as $index => $d)
                 <tr>
                     <td class="check_box">
-                        <input type="checkbox" id="myCheckbox-{{ $index }}"
-                            name="myCheckbox-{{ $index }}" data-id=" {{ $d->id }}">
+                        <input type="checkbox" id="myCheckbox-{{ $index }}" name="myCheckbox-{{ $index }}"
+                            data-id=" {{ $d->id }}">
                     </td>
                     <td><span class="name">{{ $d->name }}</span></td>
                     <td><span class="name">{{ $d->divisi }}</span></td>

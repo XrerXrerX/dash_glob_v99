@@ -211,7 +211,7 @@
         $('#search_pasaran').on('change', function() {
             var selectedValue = $(this).val();
             $.ajax({
-                url: "/paito/result",
+                url: "/paitoback/result",
                 method: "GET",
                 data: {
                     search_pasaran: selectedValue
@@ -219,7 +219,7 @@
                 success: function(response) {
                     $('.aplay_code').html(
                         response
-                    ); // Mengganti isi dengan response dari URL /paito/result
+                    ); // Mengganti isi dengan response dari URL /paitoback/result
 
                 },
                 error: function(xhr) {
@@ -227,9 +227,9 @@
                 }
             });
 
-            // $('.aplay_code').load('/paito/result', function() {
+            // $('.aplay_code').load('/paitoback/result', function() {
             //     adjustElementSize();
-            //     localStorage.setItem('lastPage', '/paito/result');
+            //     localStorage.setItem('lastPage', '/paitoback/result');
             // });
         });
 
@@ -269,9 +269,9 @@
                 'values[]': checkedValues
             }, true);
 
-            $('.aplay_code').load('/paito/result/edit/' + parameterString, function() {
+            $('.aplay_code').load('/paitoback/result/edit/' + parameterString, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/result/edit/' +
+                localStorage.setItem('lastPage', '/paitoback/result/edit/' +
                     parameterString);
             });
         });
@@ -280,18 +280,18 @@
         $(document).off('click', '#add-result').on('click', '#add-result', function(event) {
             event.preventDefault();
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/result/add', function() {
+            $('.aplay_code').load('/paitoback/result/add', function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/result/add');
+                localStorage.setItem('lastPage', '/paitoback/result/add');
             });
         });
 
 
         // $(document).on('click', '#delete', function(event) {
         //     event.preventDefault();
-        //     $('.aplay_code').load('/paito/result/delete', function() {
+        //     $('.aplay_code').load('/paitoback/result/delete', function() {
         //         adjustElementSize();
-        //         localStorage.setItem('lastPage', '/paito/result/delete');
+        //         localStorage.setItem('lastPage', '/paitoback/result/delete');
         //     });
         // })
 
@@ -320,7 +320,7 @@
                 'values[]': checkedValues
             }, true);
             var url =
-                "/paito/result/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
+                "/paitoback/result/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
 
             Swal.fire({
                 title: 'Apakah Anda yakin ingin menghapus data ini?',
@@ -350,13 +350,13 @@
                             }).then(function() {
                                 // Lakukan perubahan halaman atau tindakan lainnya setelah data berhasil dihapus
                                 $('.aplay_code').load(
-                                    '/paito/result',
+                                    '/paitoback/result',
                                     function() {
                                         adjustElementSize();
                                         localStorage
                                             .setItem(
                                                 'lastPage',
-                                                '/paito/result'
+                                                '/paitoback/result'
                                             );
                                     });
                             });
@@ -380,9 +380,9 @@
             event.preventDefault();
             var id = $(this).data('id');
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/result/view/' + id, function() {
+            $('.aplay_code').load('/paitoback/result/view/' + id, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/result/view/' + id);
+                localStorage.setItem('lastPage', '/paitoback/result/view/' + id);
             });
         });
 
@@ -392,9 +392,9 @@
             event.preventDefault();
             var id = $(this).data('id');
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/result/edit/' + id, function() {
+            $('.aplay_code').load('/paitoback/result/edit/' + id, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/result/edit/' + id);
+                localStorage.setItem('lastPage', '/paitoback/result/edit/' + id);
             });
         });
 
@@ -403,7 +403,7 @@
 
             var id = $(this).data('id');
             var url =
-                "/paito/result/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
+                "/paitoback/result/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
 
             Swal.fire({
                 title: 'Apakah Anda yakin ingin menghapus data ini?',
@@ -433,13 +433,13 @@
                             }).then(function() {
                                 // Lakukan perubahan halaman atau tindakan lainnya setelah data berhasil dihapus
                                 $('.aplay_code').load(
-                                    '/paito/result',
+                                    '/paitoback/result',
                                     function() {
                                         adjustElementSize();
                                         localStorage
                                             .setItem(
                                                 'lastPage',
-                                                '/paito/result'
+                                                '/paitoback/result'
                                             );
                                     });
                             });

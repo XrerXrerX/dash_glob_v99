@@ -29,7 +29,7 @@ use App\Http\Controllers\WebMediaGalleryVideoController;
 use App\Http\Controllers\LinkPgaController;
 use App\Http\Controllers\HadiahController;
 use App\Http\Controllers\WebContactl21Controller;
-use App\Http\Controllers\BannermodalController;
+use App\Http\Controllers\BannerModalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\MobilenoticeController;
@@ -49,6 +49,7 @@ Route::get('/', function () {
     return redirect()->intended('/');
 });
 
+Route::get('/hadiah_diskon/{website}', [FrontController::class, 'hadiah_diskon']);
 Route::get('/', [FrontController::class, 'index']);
 Route::get('/rtp', [FrontController::class, 'rtp']);
 Route::get('/paito/{pasaran?}', [FrontController::class, 'paito']);
@@ -133,6 +134,9 @@ Route::get('/notesview', function () {
     return view('komponen.notes');
 })->name('notesview');
 
+Route::get('/promosibanner/{website}', [FrontController::class, 'promosibanner']);
+
+
 
 Route::middleware('auth')->group(function () {
     /*================================================  PAITO  ============================================= */
@@ -152,25 +156,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/syair/titlebody/view/{id}', [SyairTitleController::class, 'views']);
     Route::post('/syair/titlebody/update', [SyairTitleController::class, 'update']);
 
-
     /*================================================  PAITO  ============================================= */
     /*-- Pasaran --*/
-    Route::get('/paito/pasaran', [PaitoPasaranController::class, 'index']);
-    Route::get('/paito/pasaran/add', [PaitoPasaranController::class, 'create']);
-    Route::get('/paito/pasaran/edit/{id}', [PaitoPasaranController::class, 'edit']);
-    Route::post('/paito/pasaran/store', [PaitoPasaranController::class, 'store']);
-    Route::post('/paito/pasaran/update', [PaitoPasaranController::class, 'update']);
-    Route::delete('/paito/pasaran/delete', [PaitoPasaranController::class, 'destroy']);
-    Route::get('/paito/pasaran/view/{id}', [PaitoPasaranController::class, 'views']);
+    Route::get('/paitoback/pasaran', [PaitoPasaranController::class, 'index']);
+    Route::get('/paitoback/pasaran/add', [PaitoPasaranController::class, 'create']);
+    Route::get('/paitoback/pasaran/edit/{id}', [PaitoPasaranController::class, 'edit']);
+    Route::post('/paitoback/pasaran/store', [PaitoPasaranController::class, 'store']);
+    Route::post('/paitoback/pasaran/update', [PaitoPasaranController::class, 'update']);
+    Route::delete('/paitoback/pasaran/delete', [PaitoPasaranController::class, 'destroy']);
+    Route::get('/paitoback/pasaran/view/{id}', [PaitoPasaranController::class, 'views']);
 
     /*-- Result --*/
-    Route::get('/paito/result', [PaitoResultController::class, 'index']);
-    Route::get('/paito/result/add', [PaitoResultController::class, 'create']);
-    Route::get('/paito/result/edit/{id}', [PaitoResultController::class, 'edit']);
-    Route::post('/paito/result/store', [PaitoResultController::class, 'store']);
-    Route::post('/paito/result/update', [PaitoResultController::class, 'update']);
-    Route::delete('/paito/result/delete', [PaitoResultController::class, 'destroy']);
-    Route::get('/paito/result/view/{id}', [PaitoResultController::class, 'views']);
+    Route::get('/paitoback/result', [PaitoResultController::class, 'index']);
+    Route::get('/paitoback/result/add', [PaitoResultController::class, 'create']);
+    Route::get('/paitoback/result/edit/{id}', [PaitoResultController::class, 'edit']);
+    Route::post('/paitoback/result/store', [PaitoResultController::class, 'store']);
+    Route::post('/paitoback/result/update', [PaitoResultController::class, 'update']);
+    Route::delete('/paitoback/result/delete', [PaitoResultController::class, 'destroy']);
+    Route::get('/paitoback/result/view/{id}', [PaitoResultController::class, 'views']);
 
     /*================================================  APK  =============================================== */
     /*-- Notifikasi --*/
@@ -365,13 +368,13 @@ Route::middleware('auth')->group(function () {
 
     /*================================================  Banner Modal  =============================================== */
     /*-- Banner Modal --*/
-    Route::get('/bannermodal', [BannermodalController::class, 'index']);
-    Route::get('/bannermodal/add', [BannermodalController::class, 'create']);
-    Route::post('/bannermodal/store', [BannermodalController::class, 'store']);
-    Route::get('/bannermodal/edit/{id}', [BannermodalController::class, 'edit']);
-    Route::get('/bannermodal/view/{id}', [BannermodalController::class, 'views']);
-    Route::post('/bannermodal/update', [BannermodalController::class, 'update']);
-    Route::delete('/bannermodal/delete', [BannermodalController::class, 'destroy']);
+    Route::get('/bannermodal', [BannerModalController::class, 'index']);
+    Route::get('/bannermodal/add', [BannerModalController::class, 'create']);
+    Route::post('/bannermodal/store', [BannerModalController::class, 'store']);
+    Route::get('/bannermodal/edit/{id}', [BannerModalController::class, 'edit']);
+    Route::get('/bannermodal/view/{id}', [BannerModalController::class, 'views']);
+    Route::post('/bannermodal/update', [BannerModalController::class, 'update']);
+    Route::delete('/bannermodal/delete', [BannerModalController::class, 'destroy']);
 
     /*================================================  Banner Modal  =============================================== */
     /*-- Banner Modal --*/
@@ -426,4 +429,13 @@ Route::middleware('auth')->group(function () {
 
         return view('rtp.test');
     });
+
+    /*--  Data User --*/
+    Route::get('/user', [UserController::class, 'index']);
+    Route::get('/user/add', [UserController::class, 'create']);
+    Route::get('/user/edit/{id}', [UserController::class, 'edit']);
+    Route::post('/user/store', [UserController::class, 'store']);
+    Route::post('/user/update', [UserController::class, 'update']);
+    Route::delete('/user/delete', [UserController::class, 'destroy']);
+    Route::get('/user/view/{id}', [UserController::class, 'views']);
 });

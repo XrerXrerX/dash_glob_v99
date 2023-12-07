@@ -8,17 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class WebPromosi extends Model
 {
     use HasFactory;
-    
-    protected $guarded = ['id'];
 
-    public function scopeFilter($query, array $filters) 
+    protected $guarded = ['id'];
+    protected $table = 'web_promosis';
+
+    public function scopeFilter($query, array $filters)
     {
-        if(isset($filters['search'])) {
+        if (isset($filters['search'])) {
             return $query->where('deskripsi', 'like', '%' . $filters['search'] .  '%')
-                        ->orWhere('website', 'like', '%' . $filters['search'] .  '%')
-                        ->orWhere('website_url', 'like', '%' . $filters['search'] .  '%')
-            ;
+                ->orWhere('website', 'like', '%' . $filters['search'] .  '%')
+                ->orWhere('website_url', 'like', '%' . $filters['search'] .  '%');
         }
     }
-    
 }

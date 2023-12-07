@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaStream;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -54,17 +54,53 @@ class WebMediaStreamController extends Controller
             'webrekomen' => 'required'
         ]);
 
-        $strm_foto = $request->file('strm_foto');
-        $strm_fotoPath = $strm_foto->store('public/mediastream-img');
-        $strm_fotoPath = str_replace('public/', '', $strm_fotoPath);
-        $validatedData['strm_foto'] = $strm_fotoPath;
+        // $strm_foto = $request->file('strm_foto');
+        // $strm_fotoPath = $strm_foto->store('public/mediastream-img');
+        // $strm_fotoPath = str_replace('public/', '', $strm_fotoPath);
+        // $validatedData['strm_foto'] = $strm_fotoPath;
+
+        if ($request->hasFile('strm_foto') && $request->file('strm_foto')->isValid()) {
+            $strm_foto = $request->file('strm_foto');
+            $strm_fotoPath = 'public/front/img/media/stream/profile';
+            $strm_fotoPath = str_replace('public/', '', $strm_fotoPath);
+            $randomString = Str::random(10);
+            $extension = $strm_foto->getClientOriginalExtension();
+            $strm_fotoName = $randomString . '.' . $extension;
+            $strm_foto->move($strm_fotoPath, $strm_fotoName);
+
+            $validatedData['strm_foto'] = $strm_fotoName;
+
+            if (!empty($currentImage_strm_foto)) {
+                $imagePath_strm_foto = 'front/img/media/stream/profile/' . $currentImage_strm_foto;
+                if (file_exists($imagePath_strm_foto)) {
+                    unlink($imagePath_strm_foto);
+                }
+            }
+        }
 
 
-        $bannerup = $request->file('bannerup');
-        $bannerupPath = $bannerup->store('public/mediastream-img');
-        $bannerupPath = str_replace('public/', '', $bannerupPath);
-        $validatedData['bannerup'] = $bannerupPath;
+        // $bannerup = $request->file('bannerup');
+        // $bannerupPath = $bannerup->store('public/mediastream-img');
+        // $bannerupPath = str_replace('public/', '', $bannerupPath);
+        // $validatedData['bannerup'] = $bannerupPath;
 
+        if ($request->hasFile('bannerup') && $request->file('bannerup')->isValid()) {
+            $bannerup = $request->file('bannerup');
+            $bannerupPath = 'public/front/img/promo/promoslot';
+            $bannerupPath = str_replace('public/', '', $bannerupPath);
+            $randomString = Str::random(10);
+            $extension = $bannerup->getClientOriginalExtension();
+            $bannerupName = $randomString . '.' . $extension;
+            $bannerup->move($bannerupPath, $bannerupName);
+            $validatedData['bannerup'] = $bannerupName;
+
+            if (!empty($currentImage_bannerup)) {
+                $imagePath_bannerup = 'front/img/promo/promoslot/' . $currentImage_bannerup;
+                if (file_exists($imagePath_bannerup)) {
+                    unlink($imagePath_bannerup);
+                }
+            }
+        }
         WebMediaStream::create($validatedData);
 
         $response = [
@@ -219,24 +255,38 @@ class WebMediaStreamController extends Controller
             $currentImagestrm_foto = $data->strm_foto;
             if ($request->hasFile('strm_foto') && $request->file('strm_foto')[$index]->isValid()) {
                 $strm_foto = $request->file('strm_foto')[$index];
-                $strm_fotoPath = $strm_foto->store('public/mediastream-img');
+                $strm_fotoPath = 'public/front/img/media/stream/profile';
                 $strm_fotoPath = str_replace('public/', '', $strm_fotoPath);
-                $data->strm_foto = $strm_fotoPath;
+                $randomString = Str::random(10);
+                $extension = $strm_foto->getClientOriginalExtension();
+                $strm_fotoName = $randomString . '.' . $extension;
+                $strm_foto->move($strm_fotoPath, $strm_fotoName);
+                $validatedData['strm_foto'] = $strm_fotoName;
 
                 if (!empty($currentImagestrm_foto)) {
-                    Storage::delete('public/' . $currentImagestrm_foto);
+                    $imagePath_strm_foto = 'front/img/media/stream/profile/' . $currentImagestrm_foto;
+                    if (file_exists($imagePath_strm_foto)) {
+                        unlink($imagePath_strm_foto);
+                    }
                 }
             }
 
             $currentImagebannerup = $data->bannerup;
             if ($request->hasFile('bannerup') && $request->file('bannerup')[$index]->isValid()) {
                 $bannerup = $request->file('bannerup')[$index];
-                $bannerupPath = $bannerup->store('public/mediastream-img');
+                $bannerupPath = 'public/front/img/promo/promoslot';
                 $bannerupPath = str_replace('public/', '', $bannerupPath);
-                $data->bannerup = $bannerupPath;
+                $randomString = Str::random(10);
+                $extension = $bannerup->getClientOriginalExtension();
+                $bannerupName = $randomString . '.' . $extension;
+                $bannerup->move($bannerupPath, $bannerupName);
+                $validatedData['bannerup'] = $bannerupName;
 
                 if (!empty($currentImagebannerup)) {
-                    Storage::delete('public/' . $currentImagebannerup);
+                    $imagePath_bannerup = 'front/img/promo/promoslot/' . $currentImagebannerup;
+                    if (file_exists($imagePath_bannerup)) {
+                        unlink($imagePath_bannerup);
+                    }
                 }
             }
 
@@ -274,12 +324,21 @@ class WebMediaStreamController extends Controller
 
             if ($data) {
                 $strm_foto = $data->strm_foto;
-                Storage::delete('public/' . $strm_foto);
+                if (!empty($strm_foto)) {
+                    $imagePath_strm_foto = 'front/img/promo/promoslot/' . $strm_foto;
+                    if (file_exists($imagePath_strm_foto)) {
+                        unlink($imagePath_strm_foto);
+                    }
+                }
 
                 $bannerup = $data->bannerup;
-                Storage::delete('public/' . $bannerup);
+                if (!empty($bannerup)) {
+                    $imagePath_bannerup = 'front/img/promo/promoslot/' . $bannerup;
+                    if (file_exists($imagePath_bannerup)) {
+                        unlink($imagePath_bannerup);
+                    }
+                }
 
-                // Hapus data dari database
                 $data->delete();
             }
         }

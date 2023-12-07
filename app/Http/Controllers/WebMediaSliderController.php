@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaSlider;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -251,114 +251,183 @@ class WebMediaSliderController extends Controller
             $currentImage_card_panduan = $data->card_panduan;
             $currentImage_card_gallery = $data->card_gallery;
 
-
             if ($request->hasFile('car_news') && $request->file('car_news')[$index]->isValid()) {
                 $car_news = $request->file('car_news')[$index];
-                $car_newsPath = $car_news->store('public/mediaslider-img');
+                $car_newsPath = 'public/front/img/media/carousel/card';
                 $car_newsPath = str_replace('public/', '', $car_newsPath);
-                $data->car_news = $car_newsPath;
+                $randomString = Str::random(10);
+                $extension = $car_news->getClientOriginalExtension();
+                $car_newsName = $randomString . '.' . $extension;
+                $car_news->move($car_newsPath, $car_newsName);
+                $data->car_news = $car_newsName;
 
                 if (!empty($currentImage_car_news)) {
-                    Storage::delete('public/' . $currentImage_car_news);
+                    $imagePath_car_news = 'front/img/media/carousel/card/' . $currentImage_car_news;
+                    if (file_exists($imagePath_car_news)) {
+                        unlink($imagePath_car_news);
+                    }
                 }
             }
 
             if ($request->hasFile('car_event') && $request->file('car_event')[$index]->isValid()) {
                 $car_event = $request->file('car_event')[$index];
-                $car_eventPath = $car_event->store('public/mediaslider-img');
+                $car_eventPath = 'public/front/img/media/carousel/card';
                 $car_eventPath = str_replace('public/', '', $car_eventPath);
-                $data->car_event = $car_eventPath;
+                $randomString = Str::random(10);
+                $extension = $car_event->getClientOriginalExtension();
+                $car_eventName = $randomString . '.' . $extension;
+                $car_event->move($car_eventPath, $car_eventName);
+                $data->car_event = $car_eventName;
 
                 if (!empty($currentImage_car_event)) {
-                    Storage::delete('public/' . $currentImage_car_event);
+                    $imagePath_car_event = 'front/img/media/carousel/card/' . $currentImage_car_event;
+                    if (file_exists($imagePath_car_event)) {
+                        unlink($imagePath_car_event);
+                    }
                 }
             }
 
             if ($request->hasFile('car_stream') && $request->file('car_stream')[$index]->isValid()) {
                 $car_stream = $request->file('car_stream')[$index];
-                $car_streamPath = $car_stream->store('public/mediaslider-img');
+                $car_streamPath = 'public/front/img/media/carousel/card';
                 $car_streamPath = str_replace('public/', '', $car_streamPath);
-                $data->car_stream = $car_streamPath;
+                $randomString = Str::random(10);
+                $extension = $car_stream->getClientOriginalExtension();
+                $car_streamName = $randomString . '.' . $extension;
+                $car_stream->move($car_streamPath, $car_streamName);
+                $data->car_stream = $car_streamName;
 
                 if (!empty($currentImage_car_stream)) {
-                    Storage::delete('public/' . $currentImage_car_stream);
+                    $imagePath_car_stream = 'front/img/media/carousel/card/' . $currentImage_car_stream;
+                    if (file_exists($imagePath_car_stream)) {
+                        unlink($imagePath_car_stream);
+                    }
                 }
             }
 
             if ($request->hasFile('car_panduan') && $request->file('car_panduan')[$index]->isValid()) {
                 $car_panduan = $request->file('car_panduan')[$index];
-                $car_panduanPath = $car_panduan->store('public/mediaslider-img');
+                $car_panduanPath = 'public/front/img/media/carousel/card';
                 $car_panduanPath = str_replace('public/', '', $car_panduanPath);
-                $data->car_panduan = $car_panduanPath;
+                $randomString = Str::random(10);
+                $extension = $car_panduan->getClientOriginalExtension();
+                $car_panduanName = $randomString . '.' . $extension;
+                $car_panduan->move($car_panduanPath, $car_panduanName);
+                $data->car_panduan = $car_panduanName;
 
                 if (!empty($currentImage_car_panduan)) {
-                    Storage::delete('public/' . $currentImage_car_panduan);
+                    $imagePath_car_panduan = 'front/img/media/carousel/card/' . $currentImage_car_panduan;
+                    if (file_exists($imagePath_car_panduan)) {
+                        unlink($imagePath_car_panduan);
+                    }
                 }
             }
 
             if ($request->hasFile('car_gallery') && $request->file('car_gallery')[$index]->isValid()) {
                 $car_gallery = $request->file('car_gallery')[$index];
-                $car_galleryPath = $car_gallery->store('public/mediaslider-img');
+                $car_galleryPath = 'public/front/img/media/carousel/card';
                 $car_galleryPath = str_replace('public/', '', $car_galleryPath);
-                $data->car_gallery = $car_galleryPath;
+                $randomString = Str::random(10);
+                $extension = $car_gallery->getClientOriginalExtension();
+                $car_galleryName = $randomString . '.' . $extension;
+                $car_gallery->move($car_galleryPath, $car_galleryName);
+                $data->car_gallery = $car_galleryName;
 
                 if (!empty($currentImage_car_gallery)) {
-                    Storage::delete('public/' . $currentImage_car_gallery);
+                    $imagePath_car_gallery = 'front/img/media/carousel/card/' . $currentImage_car_gallery;
+                    if (file_exists($imagePath_car_gallery)) {
+                        unlink($imagePath_car_gallery);
+                    }
                 }
             }
 
             if ($request->hasFile('card_news') && $request->file('card_news')[$index]->isValid()) {
                 $card_news = $request->file('card_news')[$index];
-                $card_newsPath = $card_news->store('public/mediaslider-img');
+                $card_newsPath = 'public/front/img/media/carousel/card';
                 $card_newsPath = str_replace('public/', '', $card_newsPath);
-                $data->card_news = $card_newsPath;
+                $randomString = Str::random(10);
+                $extension = $card_news->getClientOriginalExtension();
+                $card_newsName = $randomString . '.' . $extension;
+                $card_news->move($card_newsPath, $card_newsName);
+                $data->card_news = $card_newsName;
 
                 if (!empty($currentImage_card_news)) {
-                    Storage::delete('public/' . $currentImage_card_news);
+                    $imagePath_card_news = 'front/img/media/carousel/card/' . $currentImage_card_news;
+                    if (file_exists($imagePath_card_news)) {
+                        unlink($imagePath_card_news);
+                    }
                 }
             }
 
             if ($request->hasFile('card_event') && $request->file('card_event')[$index]->isValid()) {
                 $card_event = $request->file('card_event')[$index];
-                $card_eventPath = $card_event->store('public/mediaslider-img');
+                $card_eventPath = 'public/front/img/media/carousel/card';
                 $card_eventPath = str_replace('public/', '', $card_eventPath);
-                $data->card_event = $card_eventPath;
+                $randomString = Str::random(10);
+                $extension = $card_event->getClientOriginalExtension();
+                $card_eventName = $randomString . '.' . $extension;
+                $card_event->move($card_eventPath, $card_eventName);
+                $data->card_event = $card_eventName;
 
                 if (!empty($currentImage_card_event)) {
-                    Storage::delete('public/' . $currentImage_card_event);
+                    $imagePath_card_event = 'front/img/media/carousel/card/' . $currentImage_card_event;
+                    if (file_exists($imagePath_card_event)) {
+                        unlink($imagePath_card_event);
+                    }
                 }
             }
 
             if ($request->hasFile('card_stream') && $request->file('card_stream')[$index]->isValid()) {
                 $card_stream = $request->file('card_stream')[$index];
-                $card_streamPath = $card_stream->store('public/mediaslider-img');
+                $card_streamPath = 'public/front/img/media/carousel/card';
                 $card_streamPath = str_replace('public/', '', $card_streamPath);
-                $data->card_stream = $card_streamPath;
+                $randomString = Str::random(10);
+                $extension = $card_stream->getClientOriginalExtension();
+                $card_streamName = $randomString . '.' . $extension;
+                $card_stream->move($card_streamPath, $card_streamName);
+                $data->card_stream = $card_streamName;
 
                 if (!empty($currentImage_card_stream)) {
-                    Storage::delete('public/' . $currentImage_card_stream);
+                    $imagePath_card_stream = 'front/img/media/carousel/card/' . $currentImage_card_stream;
+                    if (file_exists($imagePath_card_stream)) {
+                        unlink($imagePath_card_stream);
+                    }
                 }
             }
 
             if ($request->hasFile('card_panduan') && $request->file('card_panduan')[$index]->isValid()) {
                 $card_panduan = $request->file('card_panduan')[$index];
-                $card_panduanPath = $card_panduan->store('public/mediaslider-img');
+                $card_panduanPath = 'public/front/img/media/carousel/card';
                 $card_panduanPath = str_replace('public/', '', $card_panduanPath);
-                $data->card_panduan = $card_panduanPath;
+                $randomString = Str::random(10);
+                $extension = $card_panduan->getClientOriginalExtension();
+                $card_panduanName = $randomString . '.' . $extension;
+                $card_panduan->move($card_panduanPath, $card_panduanName);
+                $data->card_panduan = $card_panduanName;
 
                 if (!empty($currentImage_card_panduan)) {
-                    Storage::delete('public/' . $currentImage_card_panduan);
+                    $imagePath_card_panduan = 'front/img/media/carousel/card/' . $currentImage_card_panduan;
+                    if (file_exists($imagePath_card_panduan)) {
+                        unlink($imagePath_card_panduan);
+                    }
                 }
             }
 
             if ($request->hasFile('card_gallery') && $request->file('card_gallery')[$index]->isValid()) {
                 $card_gallery = $request->file('card_gallery')[$index];
-                $card_galleryPath = $card_gallery->store('public/mediaslider-img');
+                $card_galleryPath = 'public/front/img/media/carousel/card';
                 $card_galleryPath = str_replace('public/', '', $card_galleryPath);
-                $data->card_gallery = $card_galleryPath;
+                $randomString = Str::random(10);
+                $extension = $card_gallery->getClientOriginalExtension();
+                $card_galleryName = $randomString . '.' . $extension;
+                $card_gallery->move($card_galleryPath, $card_galleryName);
+                $data->card_gallery = $card_galleryName;
 
                 if (!empty($currentImage_card_gallery)) {
-                    Storage::delete('public/' . $currentImage_card_gallery);
+                    $imagePath_card_gallery = 'front/img/media/carousel/card/' . $currentImage_card_gallery;
+                    if (file_exists($imagePath_card_gallery)) {
+                        unlink($imagePath_card_gallery);
+                    }
                 }
             }
 

@@ -86,7 +86,7 @@
             formData.append('_token', '{{ csrf_token() }}');
 
             $.ajax({
-                url: "/paito/result/update",
+                url: "/paitoback/result/update",
                 method: "POST",
                 data: formData,
                 processData: false, // Menonaktifkan pengolahan data otomatis
@@ -110,10 +110,10 @@
                             timer: 1500
                         }).then(function() {
                             // Lakukan perubahan halaman atau tindakan lainnya setelah contact berhasil dikirim
-                            $('.aplay_code').load('/paito/result', function() {
+                            $('.aplay_code').load('/paitoback/result', function() {
                                 adjustElementSize();
                                 localStorage.setItem('lastPage',
-                                    '/paito/result');
+                                    '/paitoback/result');
                             });
                         });
                     }
@@ -135,9 +135,9 @@
             event.preventDefault();
             var namabo = $(this).data('namabo');
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/result', function() {
+            $('.aplay_code').load('/paitoback/result', function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/result');
+                localStorage.setItem('lastPage', '/paitoback/result');
             });
         });
     });

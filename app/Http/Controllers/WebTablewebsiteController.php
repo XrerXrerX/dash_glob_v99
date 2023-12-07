@@ -14,7 +14,7 @@ use App\Models\Hadiahprize;
 use App\Models\Hadiahv2;
 use Illuminate\Support\Facades\Cache;
 
-class WebTablewebsiteController extends Controller
+class WebTableWebsiteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -141,10 +141,10 @@ class WebTablewebsiteController extends Controller
             'linkalternatif3' => 'required',
             'linkalternatif4' => 'required',
             'linkalternatif5' => 'required',
-            'gambar' => 'required|image|max:2000',
-            'img' => 'required|image|max:2000',
-            'promotogel' => 'required|image|max:2000',
-            'promoslot' => 'required|image|max:2000',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'promotogel' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'promoslot' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'livechat' => 'required',
             'url_canolical' => 'required',
 
@@ -157,9 +157,9 @@ class WebTablewebsiteController extends Controller
 
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
-            $gambarPath = $gambar->store('datawebsite-img', 'public');
+            $gambarPath = 'public/front/img/banner/' . $gambar->getClientOriginalName();
+            $gambar->move(public_path('front/img/banner'), $gambarPath);
         }
-
         if ($request->hasFile('img')) {
             $img = $request->file('img');
             $imgPath = $img->store('datawebsite-img', 'public');
@@ -195,7 +195,7 @@ class WebTablewebsiteController extends Controller
             'linkalternatif1' => $validatedData['linkalternatif1'],
             'linkalternatif2' => $validatedData['linkalternatif2'],
             'linkalternatif3' => $validatedData['linkalternatif3'],
-            'gambar' => $gambarPath,
+            'gambar' => $gambar->getClientOriginalName(),
             'img' => $imgPath,
             'promotogel' => $promotogelPath,
             'promoslot' => $promoslotPath,
@@ -768,10 +768,10 @@ class WebTablewebsiteController extends Controller
             'linkalternatif3.*' => 'required',
             'linkalternatif4.*' => 'required',
             'linkalternatif5.*' => 'required',
-            'gambar.*' => 'nullable|image|max:2000',
-            'img.*' => 'nullable|image|max:2000',
-            'promotogel.*' => 'nullable|image|max:2000',
-            'promoslot.*' => 'nullable|image|max:2000',
+            'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'img.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'promotogel.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'promoslot.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'livechat.*' => 'required',
             'url_canolical.*' => 'required',
         ]);
@@ -804,8 +804,10 @@ class WebTablewebsiteController extends Controller
             ];
             if ($request->hasFile('gambar.' . $index)) {
                 $gambar = $request->file('gambar.' . $index);
-                $gambarPath = $gambar->store('datawebsite-img', 'public');
-                $item['gambar'] = $gambarPath;
+                $gambarPath = 'public/front/img/banner/' . $gambar->getClientOriginalName();
+                $gambar->move(public_path('front/img/banner'), $gambarPath);
+
+                $item['gambar'] = $gambar->getClientOriginalName();
 
                 if (isset($request->oldgambar[$index])) {
                     Storage::disk('public')->delete($request->oldgambar[$index]);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class FrontController extends Controller
 {
+
     public function index()
     {
         //DATA CARAUSEL
@@ -519,7 +520,7 @@ class FrontController extends Controller
         $row_kontak = json_decode(json_encode($row_kontak), true);
         $row_kontak = json_decode(json_encode($row_kontak), true);
 
-        $row_jadwalpools = DB::select("SELECT * FROM jadwalpools");
+        $row_jadwalpools = DB::select("SELECT * FROM web_jadwalpools");
         $row_jadwalpools = json_decode(json_encode($row_jadwalpools), true);
 
         return view('front.listpools', [
@@ -642,33 +643,7 @@ class FrontController extends Controller
         //     $row_website[] = $row_web;
         // }
 
-        if ($website == 'arwanatoto') {
-            $id_website = '97';
-        } else if ($website == 'duogaming') {
-            $id_website = '98';
-        } else if ($website == 'jeeptoto') {
-            $id_website = '99';
-        } else if ($website == 'tstoto') {
-            $id_website = '100';
-        } else if ($website == 'doyantoto') {
-            $id_website = '101';
-        } else if ($website == 'arta4d') {
-            $id_website = '102';
-        } else if ($website == 'neon4d') {
-            $id_website = '103';
-        } else if ($website == 'zara4d') {
-            $id_website = '104';
-        } else if ($website == 'roma4d') {
-            $id_website = '105';
-        } else if ($website == 'nero4d') {
-            $id_website = '106';
-        } else if ($website == 'toke4d') {
-            $id_website = '108';
-        } else {
-            return 'Error: Invalid website';
-        }
-
-
+        $id_website = $this->idWebsite($website);
 
         // DATA WEBSITE
         $url = 'https://l4soyk0.com/api/datawebsite/' . $id_website;
@@ -697,5 +672,71 @@ class FrontController extends Controller
             'row_kontak' => $row_kontak,
             'row_website' => $row_website
         ]);
+    }
+
+    public function hadiah_diskon($website)
+    {
+        $id_website = $this->idWebsite($website);
+
+        // DATA WEBSITE
+        $url = 'https://l4soyk0.com/api/datawebsite/' . $id_website;
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer youk1llmyfvcking3x'
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $datawebsite = json_decode($response, true);
+        $row_website = json_decode(json_encode($datawebsite), true);
+
+        $datahadiah = "SELECT * 
+            FROM data_hadiah_dsk
+            JOIN data_hadiah_full ON data_hadiah_dsk.website = data_hadiah_full.website
+            JOIN data_hadiah_bb ON data_hadiah_dsk.website = data_hadiah_bb.website
+            JOIN data_hadiah_prize ON data_hadiah_dsk.website = data_hadiah_prize.website
+            JOIN data_hadiah_v2 ON data_hadiah_dsk.website = data_hadiah_v2.website
+            WHERE data_hadiah_dsk.website = '$website'";
+        $row_hadiah = DB::select($datahadiah);
+
+
+        return view('front.hadiah_diskon', [
+            'title' => 'Promo',
+            'row_website' => $row_website,
+            'row_hadiah' => $row_hadiah
+        ]);
+    }
+
+    function idWebsite($website)
+    {
+        if ($website == 'arwanatoto') {
+            $id_website = '97';
+        } else if ($website == 'duogaming') {
+            $id_website = '98';
+        } else if ($website == 'jeeptoto') {
+            $id_website = '99';
+        } else if ($website == 'tstoto') {
+            $id_website = '100';
+        } else if ($website == 'doyantoto') {
+            $id_website = '101';
+        } else if ($website == 'arta4d') {
+            $id_website = '102';
+        } else if ($website == 'neon4d') {
+            $id_website = '103';
+        } else if ($website == 'zara4d') {
+            $id_website = '104';
+        } else if ($website == 'roma4d') {
+            $id_website = '105';
+        } else if ($website == 'nero4d') {
+            $id_website = '106';
+        } else if ($website == 'toke4d') {
+            $id_website = '108';
+        } else if ($website == 'diorgaming') {
+            $id_website = '119';
+        } else {
+            return 'Error: Invalid website';
+        }
+
+        return $id_website;
     }
 }

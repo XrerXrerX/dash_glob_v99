@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaPanduan;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,16 +52,52 @@ class WebMediaPanduanController extends Controller
 
         ]);
 
-        $panduan_gambar = $request->file('panduan_gambar');
-        $panduan_gambarPath = $panduan_gambar->store('public/mediapanduan/img');
-        $panduan_gambarPath = str_replace('public/', '', $panduan_gambarPath);
-        $validatedData['panduan_gambar'] = $panduan_gambarPath;
+        // $panduan_gambar = $request->file('panduan_gambar');
+        // $panduan_gambarPath = $panduan_gambar->store('public/mediapanduan/img');
+        // $panduan_gambarPath = str_replace('public/', '', $panduan_gambarPath);
+        // $validatedData['panduan_gambar'] = $panduan_gambarPath;
+
+        if ($request->hasFile('panduan_gambar') && $request->file('panduan_gambar')->isValid()) {
+            $panduan_gambar = $request->file('panduan_gambar');
+            $panduan_gambarPath = 'public/front/img/media/panduan/poster';
+            $panduan_gambarPath = str_replace('public/', '', $panduan_gambarPath);
+            $randomString = Str::random(10);
+            $extension = $panduan_gambar->getClientOriginalExtension();
+            $panduan_gambarName = $randomString . '.' . $extension;
+            $panduan_gambar->move($panduan_gambarPath, $panduan_gambarName);
+            $validatedData['panduan_gambar'] = $panduan_gambarName;
+
+            if (!empty($currentImage_panduan_gambar)) {
+                $imagePath_panduan_gambar = 'front/img/media/panduan/poster/' . $currentImage_panduan_gambar;
+                if (file_exists($imagePath_panduan_gambar)) {
+                    unlink($imagePath_panduan_gambar);
+                }
+            }
+        }
 
 
-        $p1080_panduan = $request->file('p1080_panduan');
-        $p1080_panduanPath = $p1080_panduan->store('public/mediapanduan/video');
-        $p1080_panduanPath = str_replace('public/', '', $p1080_panduanPath);
-        $validatedData['p1080_panduan'] = $p1080_panduanPath;
+        // $p1080_panduan = $request->file('p1080_panduan');
+        // $p1080_panduanPath = $p1080_panduan->store('public/mediapanduan/video');
+        // $p1080_panduanPath = str_replace('public/', '', $p1080_panduanPath);
+        // $validatedData['p1080_panduan'] = $p1080_panduanPath;
+
+        if ($request->hasFile('p1080_panduan') && $request->file('p1080_panduan')->isValid()) {
+            $p1080_panduan = $request->file('p1080_panduan');
+            $p1080_panduanPath = 'public/front/img/media/panduan/video/resolusi/1080';
+            $p1080_panduanPath = str_replace('public/', '', $p1080_panduanPath);
+            $randomString = Str::random(10);
+            $extension = $p1080_panduan->getClientOriginalExtension();
+            $p1080_panduanName = $randomString . '.' . $extension;
+            $p1080_panduan->move($p1080_panduanPath, $p1080_panduanName);
+            $validatedData['p1080_panduan'] = $p1080_panduanName;
+
+            if (!empty($currentImage_p1080_panduan)) {
+                $imagePath_p1080_panduan = 'front/img/media/panduan/video/resolusi/1080/' . $currentImage_p1080_panduan;
+                if (file_exists($imagePath_p1080_panduan)) {
+                    unlink($imagePath_p1080_panduan);
+                }
+            }
+        }
 
         WebMediaPanduan::create($validatedData);
 
@@ -213,24 +249,38 @@ class WebMediaPanduanController extends Controller
             $currentImagepanduan_gambar = $data->panduan_gambar;
             if ($request->hasFile('panduan_gambar') && $request->file('panduan_gambar')[$index]->isValid()) {
                 $panduan_gambar = $request->file('panduan_gambar')[$index];
-                $panduan_gambarPath = $panduan_gambar->store('public/mediapanduan/img');
+                $panduan_gambarPath = 'public/front/img/media/panduan/poster';
                 $panduan_gambarPath = str_replace('public/', '', $panduan_gambarPath);
-                $data->panduan_gambar = $panduan_gambarPath;
+                $randomString = Str::random(10);
+                $extension = $panduan_gambar->getClientOriginalExtension();
+                $panduan_gambarName = $randomString . '.' . $extension;
+                $panduan_gambar->move($panduan_gambarPath, $panduan_gambarName);
+                $data->panduan_gambar = $panduan_gambarName;
 
                 if (!empty($currentImagepanduan_gambar)) {
-                    Storage::delete('public/' . $currentImagepanduan_gambar);
+                    $imagePath_panduan_gambar = 'front/img/media/panduan/poster/' . $currentImagepanduan_gambar;
+                    if (file_exists($imagePath_panduan_gambar)) {
+                        unlink($imagePath_panduan_gambar);
+                    }
                 }
             }
 
             $currentImagep1080_panduan = $data->p1080_panduan;
             if ($request->hasFile('p1080_panduan') && $request->file('p1080_panduan')[$index]->isValid()) {
                 $p1080_panduan = $request->file('p1080_panduan')[$index];
-                $p1080_panduanPath = $p1080_panduan->store('public/mediapanduan/video');
+                $p1080_panduanPath = 'public/front/img/media/panduan/video/resolusi/1080';
                 $p1080_panduanPath = str_replace('public/', '', $p1080_panduanPath);
-                $data->p1080_panduan = $p1080_panduanPath;
+                $randomString = Str::random(10);
+                $extension = $p1080_panduan->getClientOriginalExtension();
+                $p1080_panduanName = $randomString . '.' . $extension;
+                $p1080_panduan->move($p1080_panduanPath, $p1080_panduanName);
+                $data->p1080_panduan = $p1080_panduanName;
 
                 if (!empty($currentImagep1080_panduan)) {
-                    Storage::delete('public/' . $currentImagep1080_panduan);
+                    $imagePath_p1080_panduan = 'front/img/media/panduan/video/resolusi/1080/' . $currentImagep1080_panduan;
+                    if (file_exists($imagePath_p1080_panduan)) {
+                        unlink($imagePath_p1080_panduan);
+                    }
                 }
             }
 
@@ -265,12 +315,22 @@ class WebMediaPanduanController extends Controller
 
             if ($data) {
                 $panduan_gambar = $data->panduan_gambar;
-                Storage::delete('public/' . $panduan_gambar);
+                if (!empty($panduan_gambar)) {
+                    $imagePath_panduan_gambar = 'front/img/media/panduan/poster/' . $panduan_gambar;
+                    if (file_exists($imagePath_panduan_gambar)) {
+                        unlink($imagePath_panduan_gambar);
+                    }
+                }
 
                 $p1080_panduan = $data->p1080_panduan;
-                Storage::delete('public/' . $p1080_panduan);
+                if (!empty($p1080_panduan)) {
+                    $imagePath_p1080_panduan = 'front/img/media/panduan/video/resolusi/1080/' . $p1080_panduan;
+                    if (file_exists($imagePath_p1080_panduan)) {
+                        unlink($imagePath_p1080_panduan);
+                    }
+                }
 
-                // Hapus data dari database
+
                 $data->delete();
             }
         }

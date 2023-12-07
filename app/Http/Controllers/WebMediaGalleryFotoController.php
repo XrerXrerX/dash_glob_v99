@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaGalleryFoto;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,11 +49,16 @@ class WebMediaGalleryFotoController extends Controller
             'tgl_foto' => 'required'
         ]);
 
-        $foto_url = $request->file('foto_url');
-        $foto_urlPath = $foto_url->store('public/mediagalleryfoto-img');
-        $foto_urlPath = str_replace('public/', '', $foto_urlPath);
-        $validatedData['foto_url'] = $foto_urlPath;
-
+        if ($request->hasFile('foto_url') && $request->file('foto_url')->isValid()) {
+            $foto_url = $request->file('foto_url');
+            $foto_urlPath = 'public/front/img/media/gallery/foto';
+            $foto_urlPath = str_replace('public/', '', $foto_urlPath);
+            $randomString = Str::random(10);
+            $extension = $foto_url->getClientOriginalExtension();
+            $foto_urlName = $randomString . '.' . $extension;
+            $foto_url->move($foto_urlPath, $foto_urlName);
+            $validatedData['foto_url'] = $foto_urlName;
+        }
 
         WebMediaGalleryFoto::create($validatedData);
 
@@ -203,14 +208,33 @@ class WebMediaGalleryFotoController extends Controller
             $currentImagefoto_url = $data->foto_url;
             if ($request->hasFile('foto_url') && $request->file('foto_url')[$index]->isValid()) {
                 $foto_url = $request->file('foto_url')[$index];
-                $foto_urlPath = $foto_url->store('public/mediagalleryfoto-img');
+                $foto_urlPath = 'public/front/img/media/gallery/foto';
                 $foto_urlPath = str_replace('public/', '', $foto_urlPath);
-                $data->foto_url = $foto_urlPath;
+                $randomString = Str::random(10);
+                $extension = $foto_url->getClientOriginalExtension();
+                $foto_urlName = $randomString . '.' . $extension;
+                $foto_url->move($foto_urlPath, $foto_urlName);
+                $data->foto_url = $foto_urlName;
 
                 if (!empty($currentImagefoto_url)) {
-                    Storage::delete('public/' . $currentImagefoto_url);
+                    $imagePath_foto_url = 'front/img/media/gallery/foto/' . $currentImagefoto_url;
+                    if (file_exists($imagePath_foto_url)) {
+                        unlink($imagePath_foto_url);
+                    }
                 }
             }
+
+            // $currentImagefoto_url = $data->foto_url;
+            // if ($request->hasFile('foto_url') && $request->file('foto_url')[$index]->isValid()) {
+            //     $foto_url = $request->file('foto_url')[$index];
+            //     $foto_urlPath = $foto_url->store('public/mediagalleryfoto-img');
+            //     $foto_urlPath = str_replace('public/', '', $foto_urlPath);
+            //     $data->foto_url = $foto_urlPath;
+
+            //     if (!empty($currentImagefoto_url)) {
+            //         Storage::delete('public/' . $currentImagefoto_url);
+            //     }
+            // }
             $data->nama_foto = $validatedData['nama_foto'][$index];
             $data->tgl_foto = $validatedData['tgl_foto'][$index];
 
@@ -241,8 +265,10 @@ class WebMediaGalleryFotoController extends Controller
 
             if ($data) {
                 $foto_url = $data->foto_url;
-                Storage::delete('public/' . $foto_url);
-
+                $imagePath_foto_url = 'front/img/media/gallery/foto/' . $foto_url;
+                if (file_exists($foto_url)) {
+                    unlink($imagePath_foto_url);
+                }
 
                 // Hapus data dari database
                 $data->delete();

@@ -48,7 +48,7 @@ class UserController extends Controller
             'name' => 'required',
             'username' => ['required', 'min:3', 'max:255', 'unique:users'],
             'password' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:500',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:500',
 
         ], [
             'name.required' => 'Nama tidak boleh kosong.',
@@ -172,7 +172,7 @@ class UserController extends Controller
                 'divisi' => $data["divisi"][$index],
                 'username' => $data["username"][$index],
                 'password' => $data["password"][$index],
-                'image' => $data["image"][$index]
+                'image' => isset($data["image"][$index]) ? $data["image"][$index] : ''
             ];
             $validator = Validator::make($alldata, [
                 'name' => 'required',
@@ -203,6 +203,7 @@ class UserController extends Controller
                     $user = User::find($id);
                     $user->name = $alldata['name'];
                     $user->username = $alldata['username'];
+                    $user->divisi = $alldata['divisi'];
                     if ($alldata['password'] != '') {
                         $user->password = bcrypt($alldata['password']);
                     }

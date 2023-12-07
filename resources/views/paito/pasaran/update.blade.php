@@ -39,7 +39,7 @@
             formData.append('_token', '{{ csrf_token() }}');
 
             $.ajax({
-                url: "/paito/pasaran/update",
+                url: "/paitoback/pasaran/update",
                 method: "POST",
                 data: formData,
                 processData: false, // Menonaktifkan pengolahan data otomatis
@@ -63,10 +63,10 @@
                             timer: 1500
                         }).then(function() {
                             // Lakukan perubahan halaman atau tindakan lainnya setelah contact berhasil dikirim
-                            $('.aplay_code').load('/paito/pasaran', function() {
+                            $('.aplay_code').load('/paitoback/pasaran', function() {
                                 adjustElementSize();
                                 localStorage.setItem('lastPage',
-                                    '/paito/pasaran');
+                                    '/paitoback/pasaran');
                             });
                         });
                     }
@@ -87,9 +87,9 @@
         $(document).off('click', '#cancel').on('click', '#cancel', function(event) {
             event.preventDefault();
             var namabo = $(this).data('namabo');
-            $('.aplay_code').load('/paito/pasaran', function() {
+            $('.aplay_code').load('/paitoback/pasaran', function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/pasaran');
+                localStorage.setItem('lastPage', '/paitoback/pasaran');
             });
         });
     });

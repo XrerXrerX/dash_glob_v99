@@ -50,35 +50,42 @@
 
         $('#form').submit(function(event) {
             event.preventDefault();
+            var $submitButton = $('#Contactsubmit');
+            $submitButton.prop('disabled', true); // Menonaktifkan tombol submit
 
-            // Menggunakan variabel FormData untuk mengumpulkan data formulir
+            // Tampilkan loading
+            Swal.fire({
+                title: 'Uploading...',
+                allowOutsideClick: false,
+                showCancelButton: false, // Menghilangkan tombol cancel
+                showConfirmButton: false, // Menghilangkan tombol OK
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             var formData = new FormData(this);
 
             $.ajax({
                 url: "/web/mediapanduan/store",
                 method: "POST",
                 data: formData,
-                processData: false, // Menonaktifkan pengolahan data otomatis
-                contentType: false, // Menonaktifkan tipe konten otomatis
+                processData: false,
+                contentType: false,
                 success: function(result) {
+                    // Enable kembali tombol submit
+                    $submitButton.prop('disabled', false);
+
                     if (result.errors) {
-                        $('.alert-danger').html('');
-
-                        $.each(result.errors, function(key, value) {
-                            $('.alert-danger').show();
-                            $('.alert-danger').append('<li>' + value + '</li>');
-                        });
+                        // Logika untuk menangani error
                     } else {
-                        $('.alert-danger').hide();
-
-                        // Tampilkan SweetAlert untuk sukses
+                        // Logika untuk menangani success
                         Swal.fire({
                             icon: 'success',
                             title: 'Contactikasi berhasil dikirim!',
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function() {
-                            // Lakukan perubahan halaman atau tindakan lainnya setelah contact berhasil dikirim
                             $('.aplay_code').load('/web/mediapanduan', function() {
                                 adjustElementSize();
                                 localStorage.setItem('lastPage',
@@ -88,6 +95,9 @@
                     }
                 },
                 error: function(xhr) {
+                    // Enable kembali tombol submit
+                    $submitButton.prop('disabled', false);
+
                     // Tampilkan SweetAlert untuk kesalahan
                     Swal.fire({
                         icon: 'error',

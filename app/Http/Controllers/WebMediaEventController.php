@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaEvent;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,11 +51,29 @@ class WebMediaEventController extends Controller
             'tgl_event' => 'required'
         ]);
 
-        $gambar_event = $request->file('gambar_event');
-        $gambar_eventPath = $gambar_event->store('public/mediaevent-img');
-        $gambar_eventPath = str_replace('public/', '', $gambar_eventPath);
+        // $gambar_event = $request->file('gambar_event');
+        // $gambar_eventPath = $gambar_event->store('public/mediaevent-img');
+        // $gambar_eventPath = str_replace('public/', '', $gambar_eventPath);
 
-        $validatedData['gambar_event'] = $gambar_eventPath;
+        // $validatedData['gambar_event'] = $gambar_eventPath;
+
+        if ($request->hasFile('gambar_event') && $request->file('gambar_event')->isValid()) {
+            $gambar_event = $request->file('gambar_event');
+            $gambar_eventPath = 'public/front/img/media/event';
+            $gambar_eventPath = str_replace('public/', '', $gambar_eventPath);
+            $randomString = Str::random(10);
+            $extension = $gambar_event->getClientOriginalExtension();
+            $gambar_eventName = $randomString . '.' . $extension;
+            $gambar_event->move($gambar_eventPath, $gambar_eventName);
+            $validatedData['gambar_event'] = $gambar_eventName;
+
+            if (!empty($currentImage_gambar_event)) {
+                $imagePath_gambar_event = 'front/img/media/event/' . $currentImage_gambar_event;
+                if (file_exists($imagePath_gambar_event)) {
+                    unlink($imagePath_gambar_event);
+                }
+            }
+        }
 
         WebMediaEvent::create($validatedData);
 
@@ -204,16 +222,23 @@ class WebMediaEventController extends Controller
                 return response()->json(['error' => 'Data not found.'], 404);
             }
 
-            $currentImage = $data->gambar_event;
+            $currentImage_gambar_event = $data->gambar_event;
 
             if ($request->hasFile('gambar_event') && $request->file('gambar_event')[$index]->isValid()) {
                 $gambar_event = $request->file('gambar_event')[$index];
-                $gambar_eventPath = $gambar_event->store('public/mediaevent-img');
+                $gambar_eventPath = 'public/front/img/media/event';
                 $gambar_eventPath = str_replace('public/', '', $gambar_eventPath);
-                $data->gambar_event = $gambar_eventPath;
+                $randomString = Str::random(10);
+                $extension = $gambar_event->getClientOriginalExtension();
+                $gambar_eventName = $randomString . '.' . $extension;
+                $gambar_event->move($gambar_eventPath, $gambar_eventName);
+                $data->gambar_event = $gambar_eventName;
 
-                if (!empty($currentImage)) {
-                    Storage::delete('public/' . $currentImage);
+                if (!empty($currentImage_gambar_event)) {
+                    $imagePath_gambar_event = 'front/img/media/event/' . $currentImage_gambar_event;
+                    if (file_exists($imagePath_gambar_event)) {
+                        unlink($imagePath_gambar_event);
+                    }
                 }
             }
             $data->nama_event = $validatedData['nama_event'][$index];
@@ -249,8 +274,12 @@ class WebMediaEventController extends Controller
             if ($data) {
                 $gambar_event = $data->gambar_event;
 
-                // Hapus file gambar_event dari penyimpanan
-                Storage::delete('public/' . $gambar_event);
+                if (!empty($gambar_event)) {
+                    $imagePath_gambar_event = 'front/img/media/event/' . $gambar_event;
+                    if (file_exists($imagePath_gambar_event)) {
+                        unlink($imagePath_gambar_event);
+                    }
+                }
 
                 // Hapus data dari database
                 $data->delete();

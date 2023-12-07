@@ -205,25 +205,25 @@
                 'values[]': checkedValues
             }, true);
 
-            $('.aplay_code').load('/paito/pasaran/edit/' + parameterString, function() {
+            $('.aplay_code').load('/paitoback/pasaran/edit/' + parameterString, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/pasaran/edit/' + parameterString);
+                localStorage.setItem('lastPage', '/paitoback/pasaran/edit/' + parameterString);
             });
         });
 
 
         $(document).off('click', '#add-pasaran').on('click', '#add-pasaran', function(event) {
             event.preventDefault();
-            $('.aplay_code').load('/paito/pasaran/add', function() {
+            $('.aplay_code').load('/paitoback/pasaran/add', function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/pasaran/add');
+                localStorage.setItem('lastPage', '/paitoback/pasaran/add');
             });
         });
         // $(document).on('click', '#delete', function(event) {
         //     event.preventDefault();
-        //     $('.aplay_code').load('/paito/pasaran/delete', function() {
+        //     $('.aplay_code').load('/paitoback/pasaran/delete', function() {
         //         adjustElementSize();
-        //         localStorage.setItem('lastPage', '/paito/pasaran/delete');
+        //         localStorage.setItem('lastPage', '/paitoback/pasaran/delete');
         //     });
         // })
 
@@ -251,7 +251,8 @@
             var parameterString = $.param({
                 'values[]': checkedValues
             }, true);
-            var url = "/paito/pasaran/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
+            var url =
+            "/paitoback/pasaran/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
 
             Swal.fire({
                 title: 'Apakah Anda yakin ingin menghapus data ini?',
@@ -280,11 +281,11 @@
                                 timer: 1500
                             }).then(function() {
                                 // Lakukan perubahan halaman atau tindakan lainnya setelah data berhasil dihapus
-                                $('.aplay_code').load('/paito/pasaran',
+                                $('.aplay_code').load('/paitoback/pasaran',
                                     function() {
                                         adjustElementSize();
                                         localStorage.setItem('lastPage',
-                                            '/paito/pasaran');
+                                            '/paitoback/pasaran');
                                     });
                             });
                         },
@@ -306,9 +307,9 @@
             event.preventDefault();
             var id = $(this).data('id');
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/pasaran/view/' + id, function() {
+            $('.aplay_code').load('/paitoback/pasaran/view/' + id, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/pasaran/view/' + id);
+                localStorage.setItem('lastPage', '/paitoback/pasaran/view/' + id);
             });
         });
 
@@ -318,9 +319,9 @@
             event.preventDefault();
             var id = $(this).data('id');
             $('.aplay_code').empty();
-            $('.aplay_code').load('/paito/pasaran/edit/' + id, function() {
+            $('.aplay_code').load('/paitoback/pasaran/edit/' + id, function() {
                 adjustElementSize();
-                localStorage.setItem('lastPage', '/paito/pasaran/edit/' + id);
+                localStorage.setItem('lastPage', '/paitoback/pasaran/edit/' + id);
             });
         });
 
@@ -328,7 +329,8 @@
             event.preventDefault();
 
             var id = $(this).data('id');
-            var url = "/paito/pasaran/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
+            var url =
+            "/paitoback/pasaran/delete/"; // Ubah URL sesuai dengan endpoint delete yang sesuai
 
             Swal.fire({
                 title: 'Apakah Anda yakin ingin menghapus data ini?',
@@ -357,11 +359,11 @@
                                 timer: 1500
                             }).then(function() {
                                 // Lakukan perubahan halaman atau tindakan lainnya setelah data berhasil dihapus
-                                $('.aplay_code').load('/paito/pasaran',
+                                $('.aplay_code').load('/paitoback/pasaran',
                                     function() {
                                         adjustElementSize();
                                         localStorage.setItem('lastPage',
-                                            '/paito/pasaran');
+                                            '/paitoback/pasaran');
                                     });
                             });
                         },

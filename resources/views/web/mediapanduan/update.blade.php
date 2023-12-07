@@ -55,6 +55,19 @@
     $(document).ready(function() {
         $('#form').submit(function(event) {
             event.preventDefault();
+            var $submitButton = $('#Contactsubmit');
+            $submitButton.prop('disabled', true);
+
+            // Tampilkan loading
+            Swal.fire({
+                title: 'Uploading...',
+                allowOutsideClick: false,
+                showCancelButton: false, // Menghilangkan tombol cancel
+                showConfirmButton: false, // Menghilangkan tombol OK
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
             var formData = new FormData(this);
             $('input[type="checkbox"]', this).each(function() {
@@ -69,6 +82,7 @@
                 processData: false,
                 contentType: false,
                 success: function(result) {
+                    $submitButton.prop('disabled', false);
                     if (result.errors) {
                         $('.alert-danger').html('');
 

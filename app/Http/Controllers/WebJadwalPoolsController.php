@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\WebJadwalPools;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
+use Illuminate\Support\Str;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +16,7 @@ class WebJadwalPoolsController extends Controller
 {
     public function index()
     {
-        $jadwalpools = WebJadwalPools::latest()->get();
+        $jadwalpools = WebJadwalPools::get();
         return view('web.jadwalpools.index', [
             'title' => 'Tabel Jadwal Pools',
             'data' => $jadwalpools
@@ -51,7 +53,7 @@ class WebJadwalPoolsController extends Controller
             'link' => 'required',
             'webrekomendasi' => 'required',
             'prediksi' => 'required',
-            'harilibur' => 'required|array',
+            'harilibur' => 'nullable|array',
             'senin' => 'nullable',
             'selasa' => 'nullable',
             'rabu' => 'nullable',
@@ -61,13 +63,22 @@ class WebJadwalPoolsController extends Controller
             'minggu' => 'nullable',
         ]);
 
-        $logo = $request->file('logo');
-        $logoPath = $logo->store('public/jadwalpools-img');
-        $logoPath = str_replace('public/', '', $logoPath);
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = 'public/front/img/pools/logo';
+            $logoPath = str_replace('public/', '', $logoPath);
 
-        $validatedData['logo'] = $logoPath;
+            $randomString = Str::random(10);
+            $extension = $logo->getClientOriginalExtension();
+            $logoName = $randomString . '.' . $extension;
 
-        $validatedData['harilibur'] = implode(", ", $validatedData['harilibur']);
+            $logo->move($logoPath, $logoName);
+
+            $validatedData['logo'] = $logoName;
+        } else {
+            $validatedData['logo'] = 'null';
+        }
+        $validatedData['harilibur'] = isset($request->harilibur) ? implode(", ", $validatedData['harilibur']) : '';
         $validatedData['switch'] = isset($validatedData['switch']) ? 1 : 0;
         $validatedData['senin'] = isset($validatedData['senin']) ? 1 : 0;
         $validatedData['selasa'] = isset($validatedData['selasa']) ? 1 : 0;
@@ -209,115 +220,142 @@ class WebJadwalPoolsController extends Controller
 
     public function update(Request $request)
     {
-        $request->harilibur = array_map(function ($item) {
-            return implode(", ", $item);
-        }, $request->harilibur);
+        if (isset($request->harilibur)) {
+            $request->harilibur = array_map(function ($item) {
+                return implode(", ", $item);
+            }, $request->harilibur);
 
-        $request->harilibur = array_combine(range(0, count($request->harilibur) - 1), $request->harilibur);
+            $request->harilibur = array_combine(range(0, count($request->harilibur) - 1), $request->harilibur);
+        }
 
-        $validatedData = $request->validate([
-            'id' => 'required|array',
-            'pasaran' => 'required|array',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:300|array',
-            'jamtutup' => 'required|array',
-            'jamresult' => 'required|array',
-            'link' => 'required|array',
-            'webrekomendasi' => 'required|array',
-            'prediksi' => 'required|array',
-            'switch' => 'nullable',
-            'harilibur' => 'nullable|array',
-            'senin' => 'nullable',
-            'selasa' => 'nullable',
-            'rabu' => 'nullable',
-            'kamis' => 'nullable',
-            'jumat' => 'nullable',
-            'sabtu' => 'nullable',
-            'minggu' => 'nullable',
-        ]);
-
-        $validatedData['switch'] = array_filter($validatedData['switch'], function ($value) {
+        $request->switch = array_filter($request->switch, function ($value) {
             return $value !== "on";
         });
-        $validatedData['switch'] = array_values($validatedData['switch']);
+        $request->switch = array_values($request->switch);
 
-        $validatedData['senin'] = array_filter($validatedData['senin'], function ($value) {
+        $request->senin = array_filter($request->senin, function ($value) {
             return $value !== "on";
         });
-        $validatedData['senin'] = array_values($validatedData['senin']);
+        $request->senin = array_values($request->senin);
 
-        $validatedData['selasa'] = array_filter($validatedData['selasa'], function ($value) {
+        $request->selasa = array_filter($request->selasa, function ($value) {
             return $value !== "on";
         });
-        $validatedData['selasa'] = array_values($validatedData['selasa']);
+        $request->selasa = array_values($request->selasa);
 
-        $validatedData['rabu'] = array_filter($validatedData['rabu'], function ($value) {
+        $request->rabu = array_filter($request->rabu, function ($value) {
             return $value !== "on";
         });
-        $validatedData['rabu'] = array_values($validatedData['rabu']);
+        $request->rabu = array_values($request->rabu);
 
-        $validatedData['kamis'] = array_filter($validatedData['kamis'], function ($value) {
+        $request->kamis = array_filter($request->kamis, function ($value) {
             return $value !== "on";
         });
-        $validatedData['kamis'] = array_values($validatedData['kamis']);
+        $request->kamis = array_values($request->kamis);
 
-        $validatedData['jumat'] = array_filter($validatedData['jumat'], function ($value) {
+        $request->jumat = array_filter($request->jumat, function ($value) {
             return $value !== "on";
         });
-        $validatedData['jumat'] = array_values($validatedData['jumat']);
+        $request->jumat = array_values($request->jumat);
 
-        $validatedData['sabtu'] = array_filter($validatedData['sabtu'], function ($value) {
+        $request->sabtu = array_filter($request->sabtu, function ($value) {
             return $value !== "on";
         });
-        $validatedData['sabtu'] = array_values($validatedData['sabtu']);
+        $request->sabtu = array_values($request->sabtu);
 
-        $validatedData['minggu'] = array_filter($validatedData['minggu'], function ($value) {
+        $request->minggu = array_filter($request->minggu, function ($value) {
             return $value !== "on";
         });
-        $validatedData['minggu'] = array_values($validatedData['minggu']);
+        $request->minggu = array_values($request->minggu);
 
+        $alldata = [];
+        foreach ($request->all()["id"] as $key => $id) {
 
-        foreach ($validatedData['id'] as $index => $id) {
-            $data = WebJadwalPools::find($id);
+            $alldata[$key]['id'] = $id;
+            $alldata[$key]['pasaran'] = $request->pasaran[$key];
+            $alldata[$key]['logo'] = isset($request->logo[$key]) ? $request->logo[$key] : '';
+            $alldata[$key]['jamtutup'] = $request->jamtutup[$key];
+            $alldata[$key]['jamresult'] = $request->jamresult[$key];
+            $alldata[$key]['link'] = $request->link[$key];
+            $alldata[$key]['webrekomendasi'] = $request->webrekomendasi[$key];
+            $alldata[$key]['prediksi'] = $request->prediksi[$key];
+            $alldata[$key]['switch'] = $request->switch[$key] ?? null;
+            $alldata[$key]['harilibur'] = $request->harilibur[$key] ?? null;
+            $alldata[$key]['senin'] = $request->senin[$key] ?? null;
+            $alldata[$key]['selasa'] = $request->selasa[$key] ?? null;
+            $alldata[$key]['rabu'] = $request->rabu[$key] ?? null;
+            $alldata[$key]['kamis'] = $request->kamis[$key] ?? null;
+            $alldata[$key]['jumat'] = $request->jumat[$key] ?? null;
+            $alldata[$key]['sabtu'] = $request->sabtu[$key] ?? null;
+            $alldata[$key]['minggu'] = $request->minggu[$key] ?? null;
+        }
+        foreach ($alldata as $index => $validatedData) {
+
+            $validatedData = Validator::make($validatedData, [
+                'id' => 'required',
+                'pasaran' => 'required',
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:300',
+                'jamtutup' => 'required',
+                'jamresult' => 'required',
+                'link' => 'required',
+                'webrekomendasi' => 'required',
+                'prediksi' => 'required',
+                'switch' => 'nullable',
+                'harilibur' => 'nullable',
+                'senin' => 'nullable',
+                'selasa' => 'nullable',
+                'rabu' => 'nullable',
+                'kamis' => 'nullable',
+                'jumat' => 'nullable',
+                'sabtu' => 'nullable',
+                'minggu' => 'nullable',
+            ]);
+
+            $data = WebJadwalPools::find($validatedData->getData()['id']);
 
             if (!$data) {
                 return response()->json(['error' => 'Data not found.'], 404);
             }
-
-            $data->pasaran = $validatedData['pasaran'][$index];
+            $data->pasaran = $validatedData->getData()['pasaran'];
 
             $currentImage = $data->logo;
 
-            if ($request->hasFile('logo') && $request->file('logo')[$index]->isValid()) {
+            if ($validatedData->getData()['logo'] != "") {
                 $logo = $request->file('logo')[$index];
-                $logoPath = $logo->store('public/jadwalpools');
+                $logoPath = 'public/front/img/pools/logo';
                 $logoPath = str_replace('public/', '', $logoPath);
-                $data->logo = $logoPath;
+
+                $randomString = Str::random(10);
+                $extension = $logo->getClientOriginalExtension();
+                $logoName = $randomString . '.' . $extension;
+
+                $logo->move($logoPath, $logoName);
+
+                $data->logo = $logoName;
 
                 if (!empty($currentImage)) {
-                    Storage::delete('public/' . $currentImage);
+                    $imagePath = 'public/front/img/pools/logo/' . $currentImage;
+                    Storage::delete($imagePath);
                 }
             }
+            $data->jamtutup = $validatedData->getData()['jamtutup'];
+            $data->jamresult = $validatedData->getData()['jamresult'];
+            $data->link = $validatedData->getData()['link'];
+            $data->webrekomendasi = $validatedData->getData()['webrekomendasi'];
+            $data->prediksi = $validatedData->getData()['prediksi'];
+            $data->switch = $validatedData->getData()['switch'] ?? null;
+            $data->harilibur = $validatedData->getData()['harilibur'] ?? null;
+            $data->senin = $validatedData->getData()['senin'] ?? null;
 
-            $data->jamtutup = $validatedData['jamtutup'][$index];
-            $data->jamresult = $validatedData['jamresult'][$index];
-            $data->link = $validatedData['link'][$index];
-            $data->webrekomendasi = $validatedData['webrekomendasi'][$index];
-            $data->prediksi = $validatedData['prediksi'][$index];
-            $data->switch = $validatedData['switch'][$index];
-
-            $data->harilibur = implode(", ", $validatedData['harilibur'][$index] ?? []);
-            $data->senin = $validatedData['senin'][$index];
-
-            $data->selasa = $validatedData['selasa'][$index];
-            $data->rabu = $validatedData['rabu'][$index];
-            $data->kamis = $validatedData['kamis'][$index];
-            $data->jumat = $validatedData['jumat'][$index];
-            $data->sabtu = $validatedData['sabtu'][$index];
-            $data->minggu = $validatedData['minggu'][$index];
+            $data->selasa = $validatedData->getData()['selasa'] ?? null;
+            $data->rabu = $validatedData->getData()['rabu'] ?? null;
+            $data->kamis = $validatedData->getData()['kamis'] ?? null;
+            $data->jumat = $validatedData->getData()['jumat'] ?? null;
+            $data->sabtu = $validatedData->getData()['sabtu'] ?? null;
+            $data->minggu = $validatedData->getData()['minggu'] ?? null;
 
             $data->save();
         }
-
         return response()->json(['success' => 'Data updated successfully.']);
     }
 

@@ -16,11 +16,10 @@
                 <div class="list_form">
                     <span class="sec_label">Divisi</span>
                     <select id="divisi" name="divisi[]" {{ $disabled }}>
-                        @foreach ($datawebsite as $website)
-                            <option value="{{ $website->nama }}"
-                                {{ $website->nama == $item->divisi ? 'selected' : '' }}>
-                                {{ $website->nama }}</option>
-                        @endforeach
+                        <option value="maintenance" {{ 'maintenance' == $item->divisi ? 'selected' : '' }}>
+                            Maintenance </option>
+                        <option value="superadmin" {{ 'superadmin' == $item->divisi ? 'selected' : '' }}>
+                            Superadmin </option>
                     </select>
                 </div>
                 <div class="list_form">

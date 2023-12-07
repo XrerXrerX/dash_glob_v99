@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebMediaGalleryVideo;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApkBo;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,15 +50,27 @@ class WebMediaGalleryVideoController extends Controller
             'tgl_video' => 'required'
         ]);
 
-        $thumb_video = $request->file('thumb_video');
-        $thumb_videoPath = $thumb_video->store('public/mediagalleryvideo/img');
-        $thumb_videoPath = str_replace('public/', '', $thumb_videoPath);
-        $validatedData['thumb_video'] = $thumb_videoPath;
+        if ($request->hasFile('thumb_video') && $request->file('thumb_video')->isValid()) {
+            $thumb_video = $request->file('thumb_video');
+            $thumb_videoPath = 'public/front/img/media/gallery/video/poster';
+            $thumb_videoPath = str_replace('public/', '', $thumb_videoPath);
+            $randomString = Str::random(10);
+            $extension = $thumb_video->getClientOriginalExtension();
+            $thumb_videoName = $randomString . '.' . $extension;
+            $thumb_video->move($thumb_videoPath, $thumb_videoName);
+            $validatedData['thumb_video'] = $thumb_videoName;
+        }
 
-        $p1080_video = $request->file('p1080_video');
-        $p1080_videoPath = $p1080_video->store('public/mediagalleryvideo/video');
-        $p1080_videoPath = str_replace('public/', '', $p1080_videoPath);
-        $validatedData['p1080_video'] = $p1080_videoPath;
+        if ($request->hasFile('p1080_video') && $request->file('p1080_video')->isValid()) {
+            $p1080_video = $request->file('p1080_video');
+            $p1080_videoPath = 'public/front/img/media/gallery/video/video';
+            $p1080_videoPath = str_replace('public/', '', $p1080_videoPath);
+            $randomString = Str::random(10);
+            $extension = $p1080_video->getClientOriginalExtension();
+            $p1080_videoName = $randomString . '.' . $extension;
+            $p1080_video->move($p1080_videoPath, $p1080_videoName);
+            $validatedData['p1080_video'] = $p1080_videoName;
+        }
 
         WebMediaGalleryVideo::create($validatedData);
 
@@ -209,24 +221,38 @@ class WebMediaGalleryVideoController extends Controller
             $currentImagethumb_video = $data->thumb_video;
             if ($request->hasFile('thumb_video') && $request->file('thumb_video')[$index]->isValid()) {
                 $thumb_video = $request->file('thumb_video')[$index];
-                $thumb_videoPath = $thumb_video->store('public/mediagalleryvideo/img');
+                $thumb_videoPath = 'public/front/img/media/gallery/video/poster';
                 $thumb_videoPath = str_replace('public/', '', $thumb_videoPath);
-                $data->thumb_video = $thumb_videoPath;
+                $randomString = Str::random(10);
+                $extension = $thumb_video->getClientOriginalExtension();
+                $thumb_videoName = $randomString . '.' . $extension;
+                $thumb_video->move($thumb_videoPath, $thumb_videoName);
+                $data->thumb_video = $thumb_videoName;
 
                 if (!empty($currentImagethumb_video)) {
-                    Storage::delete('public/' . $currentImagethumb_video);
+                    $imagePath_thumb_video = 'front/img/media/gallery/video/video/' . $currentImagethumb_video;
+                    if (file_exists($imagePath_thumb_video)) {
+                        unlink($imagePath_thumb_video);
+                    }
                 }
             }
 
             $currentImagep1080_video = $data->p1080_video;
             if ($request->hasFile('p1080_video') && $request->file('p1080_video')[$index]->isValid()) {
                 $p1080_video = $request->file('p1080_video')[$index];
-                $p1080_videoPath = $p1080_video->store('public/mediagalleryvideo/video');
+                $p1080_videoPath = 'public/front/img/media/gallery/video/video';
                 $p1080_videoPath = str_replace('public/', '', $p1080_videoPath);
-                $data->p1080_video = $p1080_videoPath;
+                $randomString = Str::random(10);
+                $extension = $p1080_video->getClientOriginalExtension();
+                $p1080_videoName = $randomString . '.' . $extension;
+                $p1080_video->move($p1080_videoPath, $p1080_videoName);
+                $data->p1080_video = $p1080_videoName;
 
                 if (!empty($currentImagep1080_video)) {
-                    Storage::delete('public/' . $currentImagep1080_video);
+                    $imagePath_p1080_video = 'front/img/media/gallery/video/video/' . $currentImagep1080_video;
+                    if (file_exists($imagePath_p1080_video)) {
+                        unlink($imagePath_p1080_video);
+                    }
                 }
             }
 
@@ -260,9 +286,18 @@ class WebMediaGalleryVideoController extends Controller
 
             if ($data) {
                 $thumb_video = $data->thumb_video;
-                Storage::delete('public/' . $thumb_video);
+
+                $imagePath_thumb_video = 'front/img/media/gallery/video/video/' . $thumb_video;
+                if (file_exists($thumb_video)) {
+                    unlink($imagePath_thumb_video);
+                }
 
                 $p1080_video = $data->p1080_video;
+                $imagePath_p1080_video = 'front/img/media/gallery/video/video/' . $p1080_video;
+                if (file_exists($p1080_video)) {
+                    unlink($imagePath_p1080_video);
+                }
+
                 Storage::delete('public/' . $p1080_video);
 
                 // Hapus data dari database
