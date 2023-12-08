@@ -14,8 +14,25 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+
+
+    # Block GET requests with double slash (//)
+    RewriteCond %{THE_REQUEST} //
+    RewriteRule ^ - [F]
+
+    # Block Access to /boscitra, /bosmega, /bosgema, /boslinda with any query string
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{QUERY_STRING} .
+    RewriteCond %{QUERY_STRING} !^fbclid= [NC]
+    RewriteCond %{QUERY_STRING} !^Qt7WLRVS [NC]
+    RewriteRule ^(rtp|paito|tototools|gallery|about|contact) - [F]
+
+    # Allow Access to /boscitra/, /bosmega/, /boslinda/, /bosgema/, /boszoya/ without query string
+    RewriteRule ^(rtp|paito|tototools|gallery|about|contact)/$ - [L]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
 </IfModule>
